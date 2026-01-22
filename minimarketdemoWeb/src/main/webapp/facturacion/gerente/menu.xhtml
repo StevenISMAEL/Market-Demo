@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+    <f:event listener="#{beanSegLogin.actionVerificarLogin()}" type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+    <title>Gerencia Dashboard</title>
+    <style>
+        .card-header-orange .ui-card-title {
+            color: #d35400; /* Naranja oscuro */
+            font-weight: bold;
+            border-bottom: 2px solid #e67e22;
+            padding-bottom: 10px;
+        }
+        .card-header-blue .ui-card-title {
+            color: #2980b9; /* Azul */
+            font-weight: bold;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .card-header-green .ui-card-title {
+            color: #27ae60; /* Verde */
+            font-weight: bold;
+            border-bottom: 2px solid #2ecc71;
+            padding-bottom: 10px;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .status-despachado { background-color: #28a745; }
+        .status-pendiente { background-color: #ffc107; color: black; }
+    </style>
+</h:head>
+<body>
+    <h:form>
+        <p:menubar>
+            <p:menuitem value="Volver al Inicio" icon="pi pi-arrow-left" action="/menu?faces-redirect=true" />
+            <f:facet name="options">
+                <p:menuButton value="#{beanSegLogin.loginDTO.correo}" icon="pi pi-user" styleClass="ui-button-flat">
+                    <p:menuitem value="Cerrar sesión" action="#{beanSegLogin.actionCerrarSesion()}" icon="pi pi-sign-out"/>
+                </p:menuButton>
+            </f:facet>
+        </p:menubar>
+    </h:form>
+
+    <div style="padding: 20px; background-color: #f4f6f9;">
+        
+        <p:card styleClass="card-header-orange" style="margin-bottom: 20px">
+            <f:facet name="title">
+                <i class="pi pi-chart-line" style="margin-right: 10px; font-size: 1.2rem;"></i>
+                Tendencias de Mercado (Mensual)
+            </f:facet>
+            
+            <div style="display: flex; gap: 20px; align-items: flex-start;">
+                <div style="flex: 3;">
+                    <p:barChart model="#{beanGerencia.barModel}" style="width: 100%; height: 350px;"/>
+                </div>
+                
+                <div style="flex: 1;">
+                    <p:dataTable value="#{beanGerencia.listaMes}" var="m" size="small" scrollable="true" scrollHeight="300">
+                        <p:column headerText="Mes">
+                            <h:outputText value="#{m.nombreMes}" style="font-weight: bold;"/>
+                        </p:column>
+                        <p:column headerText="Total ($)" style="text-align: right;">
+                            <h:outputText value="#{m.totalSum}">
+                                <f:convertNumber type="currency" currencySymbol="$" />
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </p:card>
+
+        <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-fluid" columnClasses="ui-g-12 ui-md-6, ui-g-12 ui-md-6">
+            
+            <p:card styleClass="card-header-blue" style="height: 100%">
+                <f:facet name="title">
+                    <i class="pi pi-calendar" style="margin-right: 10px;"></i>
+                    Histórico de Ingresos
+                </f:facet>
+                <p:dataTable value="#{beanGerencia.listaAnio}" var="a" stripedRows="true" reflow="true">
+                    <p:column headerText="Año Fiscal">
+                        <span style="font-size: 1.2em; color: #2c3e50;"><h:outputText value="#{a.anio}" /></span>
+                    </p:column>
+                    <p:column headerText="Volumen Facturas" style="text-align: center;">
+                        <p:badge value="#{a.cantidad}" styleClass="mr-2" severity="info"/>
+                    </p:column>
+                    <p:column headerText="Recaudación Total" style="text-align: right; font-weight: bold;">
+                        <h:outputText value="#{a.totalSum}">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </p:card>
+
+            <p:card styleClass="card-header-green" style="height: 100%">
+                <f:facet name="title">
+                    <i class="pi pi-box" style="margin-right: 10px;"></i>
+                    Monitor de Logística
+                </f:facet>
+                <p:dataTable value="#{beanGerencia.listaPedidos}" var="p" stripedRows="true" reflow="true">
+                    <p:column headerText="Mes">
+                        <h:outputText value="#{p.mes}" />
+                    </p:column>
+                    <p:column headerText="Estado">
+                        <span class="status-badge status-#{p.estado.toLowerCase() == 'despachado' ? 'despachado' : 'pendiente'}">
+                            <h:outputText value="#{p.estado.toUpperCase()}" />
+                        </span>
+                    </p:column>
+                    <p:column headerText="Cant.">
+                        <h:outputText value="#{p.cantidad}" />
+                    </p:column>
+                    <p:column headerText="Valor ($)" style="text-align: right;">
+                        <h:outputText value="#{p.totalSum}">
+                             <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </p:card>
+
+        </p:panelGrid>
+    </div>
+</body>
+</html>

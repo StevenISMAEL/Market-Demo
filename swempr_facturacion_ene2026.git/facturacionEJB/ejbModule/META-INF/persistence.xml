@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+	<persistence-unit name="facturacionDS" transaction-type="JTA">
+		<jta-data-source>java:/facturacionDS</jta-data-source>
+		<class>facturacion.model.entities.Cliente</class>
+		<class>facturacion.model.entities.EstadoPedido</class>
+		<class>facturacion.model.entities.Evento</class>
+		<class>facturacion.model.entities.FacturaCab</class>
+		<class>facturacion.model.entities.FacturaDet</class>
+		<class>facturacion.model.entities.Parametro</class>
+		<class>facturacion.model.entities.PedidoCab</class>
+		<class>facturacion.model.entities.PedidoDet</class>
+		<class>facturacion.model.entities.Producto</class>
+		<class>facturacion.model.entities.Usuario</class>
+	</persistence-unit>
+</persistence>
